@@ -80,25 +80,40 @@ async def run_agent(user_message: str):
 
 async def main():
     """Main function to run the agent"""
-    print("Claude Agent SDK - Simple Example")
-    print("=" * 50)
+    print("=" * 60)
+    print("🤖 Claude Agent SDK - Interactive Chat")
+    print("=" * 60)
+    print("\nType your message and press Enter to chat with Claude.")
+    print("Commands: 'quit' or 'exit' to end the session\n")
 
     try:
-        # Example interaction
-        user_input = "Hello! What can you help me with?"
-        print(f"\nUser: {user_input}")
+        while True:
+            # Get user input
+            print("─" * 60)
+            try:
+                user_input = input("👤 You: ").strip()
+            except EOFError:
+                print("\n\n👋 Session ended.")
+                break
 
-        await run_agent(user_input)
+            # Check for exit commands
+            if user_input.lower() in ["quit", "exit", "q"]:
+                print("\n👋 Goodbye!")
+                break
 
-        # Another example
-        print("\n" + "=" * 50)
-        user_input2 = "What is 2 + 2?"
-        print(f"\nUser: {user_input2}")
+            # Skip empty inputs
+            if not user_input:
+                print("⚠️  Please enter a message.")
+                continue
 
-        await run_agent(user_input2)
+            # Process the query
+            await run_agent(user_input)
+            print()  # Add spacing between conversations
 
+    except KeyboardInterrupt:
+        print("\n\n👋 Session interrupted. Goodbye!")
     except Exception as e:
-        print(f"\nError: {e}")
+        print(f"\n❌ Error: {e}")
 
 
 if __name__ == "__main__":
