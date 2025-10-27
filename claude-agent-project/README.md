@@ -36,7 +36,11 @@ claude-agent-project/
 - 🌐 Web検索機能（WebSearch / WebFetch）を有効化
 - 📝 ファイル操作ツール（Read / Write / Edit）を許可
 - 💻 コマンド実行ツール（Bash / Grep / Glob）を許可
-- 🎨 メッセージタイプの視覚的な表示（絵文字付き）
+- 🎨 **Richライブラリによる美しいターミナル表示**
+  - マークダウンの綺麗なレンダリング
+  - シンタックスハイライト付きのコード表示
+  - カラフルなパネルとボーダー
+  - JSON表示の整形
 
 ## カスタマイズ
 
@@ -68,6 +72,7 @@ AGENT_OPTIONS = ClaudeAgentOptions(
 
 - **claude-agent-sdk**: Claude Code用の公式SDK
 - **anyio**: 非同期I/Oライブラリ
+- **rich**: ターミナルの美しい表示を実現するライブラリ
 - **Python 3.12+**: 最新のPython機能を活用
 
 ## 参考リンク
