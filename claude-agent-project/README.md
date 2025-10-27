@@ -30,17 +30,39 @@ claude-agent-project/
 
 ## 主な機能
 
-- Claude Agent SDKを使用した対話型エージェント
-- ストリーミング応答のサポート
-- 非同期処理による効率的な実装
+- 🤖 Claude Agent SDKを使用した対話型エージェント
+- 📡 ストリーミング応答のサポート
+- ⚡ 非同期処理による効率的な実装
+- 🌐 Web検索機能（WebSearch / WebFetch）を有効化
+- 📝 ファイル操作ツール（Read / Write / Edit）を許可
+- 💻 コマンド実行ツール（Bash / Grep / Glob）を許可
+- 🎨 メッセージタイプの視覚的な表示（絵文字付き）
 
 ## カスタマイズ
 
-`main.py`の`run_agent`関数や`main`関数を編集して以下をカスタマイズできます:
+`main.py`の設定を編集して以下をカスタマイズできます:
+
+### ツールの許可設定
+
+`AGENT_OPTIONS`でエージェントが使用できるツールを制御できます:
+
+```python
+AGENT_OPTIONS = ClaudeAgentOptions(
+    allowed_tools=[
+        "Read", "Write", "Edit",  # ファイル操作
+        "Bash", "Glob", "Grep",   # コマンド実行
+        "WebSearch", "WebFetch",  # Web検索
+    ],
+    permission_mode="acceptEdits",  # 編集を自動承認
+)
+```
+
+### その他のカスタマイズ
 
 - プロンプトの内容
 - エージェントとの対話フロー
 - エラーハンドリング
+- メッセージフォーマット
 
 ## 技術スタック
 

@@ -5,6 +5,7 @@ A simple AI agent using the Claude Agent SDK
 import anyio
 from claude_agent_sdk import (
     query,
+    ClaudeAgentOptions,
     AssistantMessage,
     UserMessage,
     SystemMessage,
@@ -14,6 +15,22 @@ from claude_agent_sdk import (
     ToolResultBlock,
 )
 import json
+
+
+# Configure agent options to enable web search
+AGENT_OPTIONS = ClaudeAgentOptions(
+    allowed_tools=[
+        "Read",
+        "Write",
+        "Edit",
+        "Bash",
+        "Glob",
+        "Grep",
+        "WebSearch",  # Enable web search
+        "WebFetch",   # Enable web fetch
+    ],
+    permission_mode="acceptEdits",  # Auto-accept file edits for smoother workflow
+)
 
 
 def format_message(message) -> str:
@@ -72,7 +89,7 @@ async def run_agent(user_message: str):
     """Run the agent with a user message"""
     try:
         print(f"\n🔄 Processing query...")
-        async for message in query(prompt=user_message):
+        async for message in query(prompt=user_message, options=AGENT_OPTIONS):
             print(format_message(message))
     except Exception as e:
         print(f"\n❌ Error: {str(e)}")
