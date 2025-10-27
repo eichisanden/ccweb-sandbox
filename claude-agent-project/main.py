@@ -14,7 +14,15 @@ from claude_agent_sdk import (
     ToolUseBlock,
     ToolResultBlock,
 )
-import json
+from rich.console import Console
+from rich.markdown import Markdown
+from rich.panel import Panel
+from rich.syntax import Syntax
+from rich.json import JSON
+from rich.rule import Rule
+
+# Initialize rich console
+console = Console()
 
 
 # Configure agent options to enable web search
@@ -33,104 +41,113 @@ AGENT_OPTIONS = ClaudeAgentOptions(
 )
 
 
-def format_message(message) -> str:
-    """Format a message for display based on its type"""
-    # Determine message type
+def display_message(message):
+    """Display a message with rich formatting based on its type"""
+    # Determine message type and style
     if isinstance(message, AssistantMessage):
         msg_type = "🤖 Assistant"
+        panel_style = "cyan"
     elif isinstance(message, UserMessage):
         msg_type = "👤 User"
+        panel_style = "green"
     elif isinstance(message, SystemMessage):
-        msg_type = "⚙️  System"
+        msg_type = "⚙️ System"
+        panel_style = "yellow"
     elif isinstance(message, ResultMessage):
         msg_type = "✅ Result"
+        panel_style = "green"
     else:
         msg_type = f"❓ {type(message).__name__}"
+        panel_style = "white"
 
-    # Format content blocks
-    content_parts = []
-
+    # Process content blocks
     if hasattr(message, 'content'):
         if isinstance(message.content, str):
-            content_parts.append(message.content)
+            # Simple string content
+            console.print(Panel(message.content, title=msg_type, border_style=panel_style))
         elif isinstance(message.content, list):
             for block in message.content:
                 if isinstance(block, TextBlock):
-                    content_parts.append(f"📝 {block.text}")
+                    # Render text as Markdown for beautiful formatting
+                    md = Markdown(block.text)
+                    console.print(Panel(md, title=msg_type, border_style=panel_style))
                 elif isinstance(block, ToolUseBlock):
-                    tool_info = f"🔧 Tool: {block.name}"
+                    # Display tool usage with syntax highlighting
+                    tool_title = f"🔧 Tool: {block.name}"
                     if hasattr(block, 'input') and block.input:
-                        tool_info += f"\n   Input: {json.dumps(block.input, indent=2, ensure_ascii=False)}"
-                    content_parts.append(tool_info)
+                        json_obj = JSON.from_data(block.input)
+                        console.print(Panel(json_obj, title=tool_title, border_style="magenta"))
+                    else:
+                        console.print(Panel(f"Tool: {block.name}", title=tool_title, border_style="magenta"))
                 elif isinstance(block, ToolResultBlock):
-                    result_info = f"🔨 Tool Result (ID: {block.tool_use_id})"
+                    # Display tool results
+                    result_title = f"🔨 Tool Result (ID: {block.tool_use_id[:8]}...)"
                     if hasattr(block, 'content'):
-                        result_info += f"\n   {block.content}"
-                    content_parts.append(result_info)
+                        content = str(block.content)
+                        # Try to render as markdown if it looks like text
+                        if len(content) < 5000 and '\n' in content:
+                            console.print(Panel(Markdown(content), title=result_title, border_style="blue"))
+                        else:
+                            console.print(Panel(content, title=result_title, border_style="blue"))
+                    else:
+                        console.print(Panel("(no content)", title=result_title, border_style="blue"))
                 else:
-                    content_parts.append(f"   {type(block).__name__}: {block}")
-
-    # Build final formatted message
-    separator = "─" * 60
-    formatted = f"\n{separator}\n{msg_type}\n{separator}\n"
-
-    if content_parts:
-        formatted += "\n".join(content_parts)
+                    # Fallback for unknown block types
+                    console.print(Panel(str(block), title=f"{type(block).__name__}", border_style="white"))
+        else:
+            # Fallback for non-list, non-string content
+            console.print(Panel(str(message.content), title=msg_type, border_style=panel_style))
     else:
-        # Fallback to str representation
-        formatted += str(message)
-
-    formatted += f"\n{separator}"
-
-    return formatted
+        # Fallback if no content attribute
+        console.print(Panel(str(message), title=msg_type, border_style=panel_style))
 
 
 async def run_agent(user_message: str):
     """Run the agent with a user message"""
     try:
-        print(f"\n🔄 Processing query...")
+        console.print("\n[bold cyan]🔄 Processing query...[/bold cyan]")
         async for message in query(prompt=user_message, options=AGENT_OPTIONS):
-            print(format_message(message))
+            display_message(message)
     except Exception as e:
-        print(f"\n❌ Error: {str(e)}")
+        console.print(f"\n[bold red]❌ Error:[/bold red] {str(e)}")
 
 
 async def main():
     """Main function to run the agent"""
-    print("=" * 60)
-    print("🤖 Claude Agent SDK - Interactive Chat")
-    print("=" * 60)
-    print("\nType your message and press Enter to chat with Claude.")
-    print("Commands: 'quit' or 'exit' to end the session\n")
+    console.print()
+    console.rule("[bold cyan]🤖 Claude Agent SDK - Interactive Chat[/bold cyan]")
+    console.print()
+    console.print("[dim]Type your message and press Enter to chat with Claude.[/dim]")
+    console.print("[dim]Commands: 'quit' or 'exit' to end the session[/dim]\n")
 
     try:
         while True:
             # Get user input
-            print("─" * 60)
+            console.rule(style="dim")
             try:
-                user_input = input("👤 You: ").strip()
+                user_input = console.input("[bold green]👤 You:[/bold green] ").strip()
             except EOFError:
-                print("\n\n👋 Session ended.")
+                console.print("\n\n[bold yellow]👋 Session ended.[/bold yellow]")
                 break
 
             # Check for exit commands
             if user_input.lower() in ["quit", "exit", "q"]:
-                print("\n👋 Goodbye!")
+                console.print("\n[bold yellow]👋 Goodbye![/bold yellow]")
                 break
 
             # Skip empty inputs
             if not user_input:
-                print("⚠️  Please enter a message.")
+                console.print("[yellow]⚠️  Please enter a message.[/yellow]")
                 continue
 
             # Process the query
             await run_agent(user_input)
-            print()  # Add spacing between conversations
+            console.print()  # Add spacing between conversations
 
     except KeyboardInterrupt:
-        print("\n\n👋 Session interrupted. Goodbye!")
+        console.print("\n\n[bold yellow]👋 Session interrupted. Goodbye![/bold yellow]")
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        console.print(f"\n[bold red]❌ Error:[/bold red] {e}")
 
 
 if __name__ == "__main__":
