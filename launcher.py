@@ -14,16 +14,17 @@ def show_menu():
     print("🎯 AI Agent Project Launcher")
     print("=" * 60)
     print("\n[Menu]")
-    print("1. 🤖 Run AI Agent Interactive Chat")
-    print("2. 👋 Exit")
+    print("1. 🤖 Run Claude Agent Interactive Chat")
+    print("2. 🌐 Run OpenAI Agent Interactive Chat")
+    print("3. 👋 Exit")
     print()
 
 
-def run_chat():
-    """Run the AI Agent chat application"""
+def run_claude_chat():
+    """Run the Claude Agent chat application"""
     try:
         print("\n" + "─" * 60)
-        print("🚀 Starting AI Agent Chat...")
+        print("🚀 Starting Claude Agent Chat...")
         print("─" * 60 + "\n")
 
         # Get the script directory
@@ -49,6 +50,36 @@ def run_chat():
         return 1
 
 
+def run_openai_chat():
+    """Run the OpenAI Agent chat application"""
+    try:
+        print("\n" + "─" * 60)
+        print("🚀 Starting OpenAI Agent Chat...")
+        print("─" * 60 + "\n")
+
+        # Get the script directory
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Run the chat application
+        result = subprocess.run(
+            ["uv", "run", "main.py"],
+            cwd=os.path.join(script_dir, "openai-agent-project")
+        )
+
+        print("\n" + "─" * 60)
+        print("✅ Chat session ended")
+        print("─" * 60)
+
+        return result.returncode
+    except FileNotFoundError:
+        print("\n❌ Error: 'uv' command not found. Please install uv first.")
+        print("   Visit: https://docs.astral.sh/uv/")
+        return 1
+    except Exception as e:
+        print(f"\n❌ Error: {e}")
+        return 1
+
+
 def main():
     """Main function to run the launcher"""
     print("\n🌟 Welcome to AI Agent Project!")
@@ -57,16 +88,19 @@ def main():
         show_menu()
 
         try:
-            choice = input("👉 Select an option (1-2): ").strip()
+            choice = input("👉 Select an option (1-3): ").strip()
 
             if choice == "1":
-                run_chat()
+                run_claude_chat()
                 input("\n📌 Press Enter to return to menu...")
             elif choice == "2":
+                run_openai_chat()
+                input("\n📌 Press Enter to return to menu...")
+            elif choice == "3":
                 print("\n👋 Thank you for using AI Agent Project. Goodbye!")
                 break
             else:
-                print("\n⚠️  Invalid option. Please select 1 or 2.")
+                print("\n⚠️  Invalid option. Please select 1-3.")
 
         except KeyboardInterrupt:
             print("\n\n👋 Interrupted. Goodbye!")
