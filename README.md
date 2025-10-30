@@ -1,6 +1,6 @@
-# Claude Agent SDK Workspace
+# AI Agent Workspace
 
-Claude Agent SDKを使用したプロジェクトのワークスペースです。
+Claude Agent SDKを使用したAIエージェントプロジェクトのワークスペースです。
 
 ## 🚀 クイックスタート
 
@@ -25,7 +25,7 @@ uv run main.py
 ```
 ccweb-sandbox/
 ├── launcher.py              # 🎯 メニューランチャー（推奨）
-├── claude-agent-project/    # Claude Agent SDKプロジェクト
+├── claude-agent-project/    # AI Agentプロジェクト
 │   ├── main.py             # 対話型チャットアプリケーション
 │   ├── pyproject.toml      # プロジェクト設定
 │   └── README.md           # プロジェクト詳細
@@ -48,7 +48,7 @@ ccweb-sandbox/
    ```
 
 2. **メニューから選択**
-   - `1`: Claude Agent チャットを起動
+   - `1`: AI Agent チャットを起動
    - `2`: 終了
 
 3. **チャットを楽しむ**

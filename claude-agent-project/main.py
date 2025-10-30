@@ -115,9 +115,9 @@ async def run_agent(user_message: str):
 async def main():
     """Main function to run the agent"""
     console.print()
-    console.rule("[bold cyan]🤖 Claude Agent SDK - Interactive Chat[/bold cyan]")
+    console.rule("[bold cyan]🤖 AI Agent - Interactive Chat[/bold cyan]")
     console.print()
-    console.print("[dim]Type your message and press Enter to chat with Claude.[/dim]")
+    console.print("[dim]Type your message and press Enter to chat with AI.[/dim]")
     console.print("[dim]Commands: 'quit' or 'exit' to end the session[/dim]\n")
 
     try:

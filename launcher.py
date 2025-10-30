@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Claude Agent Project Launcher
+AI Agent Project Launcher
 Interactive menu to run different components of the project
 """
 import subprocess
@@ -11,19 +11,19 @@ import os
 def show_menu():
     """Display the main menu"""
     print("\n" + "=" * 60)
-    print("🎯 Claude Agent Project Launcher")
+    print("🎯 AI Agent Project Launcher")
     print("=" * 60)
     print("\n[Menu]")
-    print("1. 🤖 Run Claude Agent Interactive Chat")
+    print("1. 🤖 Run AI Agent Interactive Chat")
     print("2. 👋 Exit")
     print()
 
 
 def run_chat():
-    """Run the Claude Agent chat application"""
+    """Run the AI Agent chat application"""
     try:
         print("\n" + "─" * 60)
-        print("🚀 Starting Claude Agent Chat...")
+        print("🚀 Starting AI Agent Chat...")
         print("─" * 60 + "\n")
 
         # Get the script directory
@@ -51,7 +51,7 @@ def run_chat():
 
 def main():
     """Main function to run the launcher"""
-    print("\n🌟 Welcome to Claude Agent Project!")
+    print("\n🌟 Welcome to AI Agent Project!")
 
     while True:
         show_menu()
@@ -63,7 +63,7 @@ def main():
                 run_chat()
                 input("\n📌 Press Enter to return to menu...")
             elif choice == "2":
-                print("\n👋 Thank you for using Claude Agent Project. Goodbye!")
+                print("\n👋 Thank you for using AI Agent Project. Goodbye!")
                 break
             else:
                 print("\n⚠️  Invalid option. Please select 1 or 2.")

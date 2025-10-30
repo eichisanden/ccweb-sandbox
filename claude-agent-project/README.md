@@ -1,4 +1,4 @@
-# Claude Agent Project
+# AI Agent Project
 
 Claude Agent SDKを使用したシンプルなAIエージェントプロジェクト
 
