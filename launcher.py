@@ -16,7 +16,8 @@ def show_menu():
     print("\n[Menu]")
     print("1. 🤖 Run Claude Agent Interactive Chat")
     print("2. 🌐 Run OpenAI Agent Interactive Chat")
-    print("3. 👋 Exit")
+    print("3. 🔧 Run OpenAI Agents SDK Chat (Multi-Agent)")
+    print("4. 👋 Exit")
     print()
 
 
@@ -80,6 +81,36 @@ def run_openai_chat():
         return 1
 
 
+def run_openai_agents_chat():
+    """Run the OpenAI Agents SDK chat application"""
+    try:
+        print("\n" + "─" * 60)
+        print("🚀 Starting OpenAI Agents SDK Chat...")
+        print("─" * 60 + "\n")
+
+        # Get the script directory
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Run the chat application
+        result = subprocess.run(
+            ["uv", "run", "main.py"],
+            cwd=os.path.join(script_dir, "openai-agents-project")
+        )
+
+        print("\n" + "─" * 60)
+        print("✅ Chat session ended")
+        print("─" * 60)
+
+        return result.returncode
+    except FileNotFoundError:
+        print("\n❌ Error: 'uv' command not found. Please install uv first.")
+        print("   Visit: https://docs.astral.sh/uv/")
+        return 1
+    except Exception as e:
+        print(f"\n❌ Error: {e}")
+        return 1
+
+
 def main():
     """Main function to run the launcher"""
     print("\n🌟 Welcome to AI Agent Project!")
@@ -88,7 +119,7 @@ def main():
         show_menu()
 
         try:
-            choice = input("👉 Select an option (1-3): ").strip()
+            choice = input("👉 Select an option (1-4): ").strip()
 
             if choice == "1":
                 run_claude_chat()
@@ -97,10 +128,13 @@ def main():
                 run_openai_chat()
                 input("\n📌 Press Enter to return to menu...")
             elif choice == "3":
+                run_openai_agents_chat()
+                input("\n📌 Press Enter to return to menu...")
+            elif choice == "4":
                 print("\n👋 Thank you for using AI Agent Project. Goodbye!")
                 break
             else:
-                print("\n⚠️  Invalid option. Please select 1-3.")
+                print("\n⚠️  Invalid option. Please select 1-4.")
 
         except KeyboardInterrupt:
             print("\n\n👋 Interrupted. Goodbye!")
