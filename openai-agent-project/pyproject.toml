@@ -1,0 +1,12 @@
+[project]
+name = "openai-agent-project"
+version = "0.1.0"
+description = "OpenAI Chat Agent with streaming support"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "openai>=2.6.0",
+    "anyio>=4.0.0",
+    "rich>=13.0.0",
+    "python-dotenv>=1.0.0",
+]
